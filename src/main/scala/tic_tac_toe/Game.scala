@@ -1,15 +1,20 @@
-import scala.scalajs.js.JSApp
-import org.scalajs.dom.document
-import org.scalajs.dom.raw.{Event, HTMLInputElement}
-import com.thoughtworks.binding.{Binding, dom}
+package tic_tac_toe
+
 import com.thoughtworks.binding.Binding.{Var, Vars}
+import com.thoughtworks.binding.dom
+import org.scalajs.dom.raw.Event
 
-import scala.xml.Elem
+object Game {
+  case class GameParams(height: Int, width: Int, goal: Int)
 
-object MainApp extends JSApp {
-  implicit def makeIntellijHappy(x: scala.xml.Node): Binding[org.scalajs.dom.raw.Node] = ???
+  def reset(matrix: Vars[Vars[Var[Int]]], playerOnTurn: Var[Int]): Unit = {
+    matrix.get.map(_.get.map(_.:=(0)))
+    playerOnTurn:=0
+  }
 
-  @dom def game(height: Int, width: Int, goal: Int) = {
+  @dom def newGame(params: GameParams, goToMenu: Unit => Unit) = {
+    import params._
+
     val matrix: Vars[Vars[Var[Int]]] = Vars(Seq.fill(height)(Vars(Seq.fill(width)(Var(0)): _*)): _*)
     val playerOnTurn = Var(0)
     val emptyCells = Var(height*width)
@@ -20,7 +25,7 @@ object MainApp extends JSApp {
         playerOnTurn.:=((playerOnTurn.get + 1) % 2)
         emptyCells.:=(emptyCells.get - 1)
         if (findRow() || emptyCells.get == 0) {
-          runNewGame()
+          reset(matrix, playerOnTurn)
         }
       }
     }
@@ -68,6 +73,7 @@ object MainApp extends JSApp {
           {row.map { value =>
           <td onclick={(_: Event) => handleClick(value, playerOnTurn)}>
             {value.bind match {
+
             case 0 => " "
             case 1 => "X"
             case 2 => "O"
@@ -76,16 +82,13 @@ object MainApp extends JSApp {
         }}
         </tr>
       }}
-
       </table>
+      <button onclick={ _: Event => goToMenu(()) }>
+        Menu
+      </button>
+      <button onclick={ _: Event => reset(matrix, playerOnTurn)}>
+        Reset
+      </button>
     </div>
-  }
-
-  def main(): Unit = {
-    runNewGame()
-  }
-
-  def runNewGame(): Unit = {
-    dom.render(document.getElementById("mainContainer"), game(20, 20, 5))
   }
 }
