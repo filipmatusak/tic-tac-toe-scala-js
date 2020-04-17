@@ -5,11 +5,12 @@ import com.thoughtworks.binding.dom
 import org.scalajs.dom.raw.Event
 
 object Game {
+
   case class GameParams(height: Int, width: Int, goal: Int)
 
   def reset(matrix: Vars[Vars[Var[Int]]], playerOnTurn: Var[Int]): Unit = {
     matrix.get.map(_.get.map(_.:=(0)))
-    playerOnTurn:=0
+    playerOnTurn := 0
   }
 
   @dom def newGame(params: GameParams, goToMenu: Unit => Unit) = {
@@ -17,7 +18,7 @@ object Game {
 
     val matrix: Vars[Vars[Var[Int]]] = Vars(Seq.fill(height)(Vars(Seq.fill(width)(Var(0)): _*)): _*)
     val playerOnTurn = Var(0)
-    val emptyCells = Var(height*width)
+    val emptyCells = Var(height * width)
 
     def handleClick(value: Var[Int], playerOnTurn: Var[Int]): Unit = {
       if (value.get == 0) {
@@ -83,10 +84,10 @@ object Game {
         </tr>
       }}
       </table>
-      <button onclick={ _: Event => goToMenu(()) }>
+      <button onclick={_: Event => goToMenu(())}>
         Menu
       </button>
-      <button onclick={ _: Event => reset(matrix, playerOnTurn)}>
+      <button onclick={_: Event => reset(matrix, playerOnTurn)}>
         Reset
       </button>
     </div>
