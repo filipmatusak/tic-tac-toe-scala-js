@@ -8,9 +8,10 @@ object Game {
 
   case class GameParams(height: Int, width: Int, goal: Int)
 
-  def reset(matrix: Vars[Vars[Var[Int]]], playerOnTurn: Var[Int]): Unit = {
+  def reset(params: GameParams, matrix: Vars[Vars[Var[Int]]], playerOnTurn: Var[Int], emptyCells: Var[Int]): Unit = {
     matrix.get.map(_.get.map(_.:=(0)))
     playerOnTurn := 0
+    emptyCells := params.height * params.width
   }
 
   @dom def newGame(params: GameParams, goToMenu: Unit => Unit) = {
@@ -26,7 +27,7 @@ object Game {
         playerOnTurn.:=((playerOnTurn.get + 1) % 2)
         emptyCells.:=(emptyCells.get - 1)
         if (findRow() || emptyCells.get == 0) {
-          reset(matrix, playerOnTurn)
+          reset(params, matrix, playerOnTurn, emptyCells)
         }
       }
     }
@@ -87,7 +88,7 @@ object Game {
       <button onclick={_: Event => goToMenu(())}>
         Menu
       </button>
-      <button onclick={_: Event => reset(matrix, playerOnTurn)}>
+      <button onclick={_: Event => reset(params, matrix, playerOnTurn, emptyCells)}>
         Reset
       </button>
     </div>

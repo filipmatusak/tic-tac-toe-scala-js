@@ -26,11 +26,22 @@ object MainApp extends JSApp {
       else {
         <div>
           Height:
-          <input type="number" id="heightInput" min="3" onchange={(e: Event) => height := heightInput.value.toInt} value={height.get.toString}></input>
+          <input type="number"
+                 id="heightInput"
+                 min="3"
+                 onchange={(e: Event) => height := heightInput.value.toInt}
+                 value={height.get.toString}></input>
           Width:
-          <input type="number" id="widthInput" min="3" onchange={(e: Event) => width := widthInput.value.toInt} value={width.get.toString}></input>
+          <input type="number"
+                 id="widthInput"
+                 min="3"
+                 onchange={(e: Event) => width := widthInput.value.toInt}
+                 value={width.get.toString}></input>
           Goal:
-          <input type="number" id="goalInput" onchange={(e: Event) => goal := goalInput.value.toInt} value={goal.get.toString}></input>
+          <input type="number"
+                 id="goalInput"
+                 onchange={(e: Event) => goal := goalInput.value.toInt}
+                 value={goal.get.toString}></input>
           <button onclick={_: Event => menu := false}>Start</button>
         </div>
       }
