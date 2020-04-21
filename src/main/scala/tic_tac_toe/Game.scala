@@ -9,29 +9,41 @@ object Game {
 
   case class GameParams(height: Int, width: Int, goal: Int)
 
-  def reset(params: GameParams, matrix: Vector[Vector[Var[Int]]], playerOnTurn: Var[Int], emptyCells: Var[Int]): Unit = {
+  def reset(params: GameParams,
+            matrix: Vector[Vector[Var[Int]]],
+            playerOnTurn: Var[Int],
+            emptyCells: Var[Int],
+            history: Var[List[Var[Int]]]): Unit = {
     matrix.map(_.map(_.:=(0)))
     playerOnTurn := 0
     emptyCells := params.height * params.width
+    history := Nil
   }
 
   @dom def newGame(params: GameParams, goToMenu: Unit => Unit) = {
     import params._
 
-
     val matrix: Vector[Vector[Var[Int]]] = Vector.fill(height)(Vector.fill(width)(Var(0)))
     val playerOnTurn = Var(0)
     val emptyCells = Var(height * width)
+    val history: Var[List[Var[Int]]] = Var(Nil)
 
     def handleClick(value: Var[Int], playerOnTurn: Var[Int]): Unit = {
       if (value.get == 0) {
         value.:=(playerOnTurn.get + 1)
         playerOnTurn.:=((playerOnTurn.get + 1) % 2)
         emptyCells.:=(emptyCells.get - 1)
+        history := (value :: history.get)
         if (findRow() || emptyCells.get == 0) {
-          reset(params, matrix, playerOnTurn, emptyCells)
+          reset(params, matrix, playerOnTurn, emptyCells, history)
         }
       }
+    }
+
+    def handleBack(): Unit = {
+      history.get.head := 0
+      history := history.get.tail
+      playerOnTurn.:=((playerOnTurn.get + 1) % 2)
     }
 
     //not optimal
@@ -74,7 +86,7 @@ object Game {
         }}
         </p>
         <div class="col s12">
-          <table >
+          <table>
             {matrix.map { row =>
             <tr>
               {row.map { value =>
@@ -89,16 +101,14 @@ object Game {
             </tr>
           }}
           </table>
-            <button class="col s3"
-                    onclick={_: Event => goToMenu(())}>
-              Menu
-            </button>
-            <button class="col s3"
-                    onclick={_: Event => reset(params, matrix, playerOnTurn, emptyCells)}>
-              Reset
-            </button>
+          <button class="col s3" onclick={_: Event => goToMenu(())}>Menu</button>
+          <button class="col s3" onclick={_: Event => reset(params, matrix, playerOnTurn, emptyCells, history)}>Reset</button>
+          {
+          if (history.bind.nonEmpty) <button class="col s3" onclick={_: Event => handleBack()}>Back</button>
+          else <div></div>
+          }
         </div>
       </div>
     </div>
-    }
-    }
+  }
+}

@@ -1,10 +1,8 @@
 td {
-    height: 30px; /* already tried changing values */
-    width: 30px; /* doesn't even get squared */
-    /* shadow stuff here */
+    height: 30px;
+    width: 30px;
     border-radius: 0px;
-    /* background stuff here */
-    border: 1px solid black;
+    border: 1px solid #3EB5E8;
     padding: 0px;
     text-align: center;
 }
