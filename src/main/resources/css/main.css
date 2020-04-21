@@ -1,0 +1,16 @@
+td {
+    height: 30px; /* already tried changing values */
+    width: 30px; /* doesn't even get squared */
+    /* shadow stuff here */
+    border-radius: 0px;
+    /* background stuff here */
+    border: 1px solid black;
+    padding: 0px;
+    text-align: center;
+}
+
+table {
+    border-spacing: 0px;
+    width: auto;
+    margin: auto;
+}

@@ -1,15 +1,16 @@
 package tic_tac_toe
 
-import com.thoughtworks.binding.Binding.{Var, Vars}
+import com.thoughtworks.binding.Binding.Var
 import com.thoughtworks.binding.dom
 import org.scalajs.dom.raw.Event
+import scalaz.std.vector._
 
 object Game {
 
   case class GameParams(height: Int, width: Int, goal: Int)
 
-  def reset(params: GameParams, matrix: Vars[Vars[Var[Int]]], playerOnTurn: Var[Int], emptyCells: Var[Int]): Unit = {
-    matrix.get.map(_.get.map(_.:=(0)))
+  def reset(params: GameParams, matrix: Vector[Vector[Var[Int]]], playerOnTurn: Var[Int], emptyCells: Var[Int]): Unit = {
+    matrix.map(_.map(_.:=(0)))
     playerOnTurn := 0
     emptyCells := params.height * params.width
   }
@@ -17,7 +18,8 @@ object Game {
   @dom def newGame(params: GameParams, goToMenu: Unit => Unit) = {
     import params._
 
-    val matrix: Vars[Vars[Var[Int]]] = Vars(Seq.fill(height)(Vars(Seq.fill(width)(Var(0)): _*)): _*)
+
+    val matrix: Vector[Vector[Var[Int]]] = Vector.fill(height)(Vector.fill(width)(Var(0)))
     val playerOnTurn = Var(0)
     val emptyCells = Var(height * width)
 
@@ -36,11 +38,11 @@ object Game {
     def findRow(): Boolean = {
       def find(startX: Int, startY: Int, dx: Int, dy: Int): Boolean = {
         var count = 1
-        var last = matrix.get(startX).get(startY).get
+        var last = matrix(startX)(startY).get
         var x = startX + dx
         var y = startY + dy
         while (x >= 0 && x < height && y >= 0 && y < width) {
-          val v = matrix.get(x).get(y).get
+          val v = matrix(x)(y).get
           if (v == last) {
             count += 1
             if (count >= goal && last > 0) return true
@@ -62,35 +64,41 @@ object Game {
         (1 until width).exists(column => find(height - 1, column, -1, 1))
     }
 
-    <div>
-      <p>Player on turn:
-        {playerOnTurn.bind match {
-        case 0 => "X"
-        case 1 => "O"
-      }}
-      </p>
-      <table>
-        {matrix.map { row =>
-        <tr>
-          {row.map { value =>
-          <td onclick={(_: Event) => handleClick(value, playerOnTurn)}>
-            {value.bind match {
+    <div class="container">
+      <div class="row">
 
-            case 0 => " "
-            case 1 => "X"
-            case 2 => "O"
-          }}
-          </td>
+        <p class="col s12">Player on turn:
+          {playerOnTurn.bind match {
+          case 0 => "X"
+          case 1 => "O"
         }}
-        </tr>
-      }}
-      </table>
-      <button onclick={_: Event => goToMenu(())}>
-        Menu
-      </button>
-      <button onclick={_: Event => reset(params, matrix, playerOnTurn, emptyCells)}>
-        Reset
-      </button>
+        </p>
+        <div class="col s12">
+          <table >
+            {matrix.map { row =>
+            <tr>
+              {row.map { value =>
+              <td onclick={(_: Event) => handleClick(value, playerOnTurn)}>
+                {value.bind match {
+                case 0 => " "
+                case 1 => "X"
+                case 2 => "O"
+              }}
+              </td>
+            }}
+            </tr>
+          }}
+          </table>
+            <button class="col s3"
+                    onclick={_: Event => goToMenu(())}>
+              Menu
+            </button>
+            <button class="col s3"
+                    onclick={_: Event => reset(params, matrix, playerOnTurn, emptyCells)}>
+              Reset
+            </button>
+        </div>
+      </div>
     </div>
-  }
-}
+    }
+    }
