@@ -1,4 +1,5 @@
 enablePlugins(WorkbenchPlugin)
+enablePlugins(JavaAppPackaging)
 
 lazy val root = project
   .in(file("."))
@@ -9,7 +10,7 @@ lazy val root = project
       version      := "0.1-SNAPSHOT",
       scalaVersion := "2.11.11"
     )),
-    name := "Piskvorky",
+    name := "Tic-tac-toe",
     libraryDependencies ++= Seq(
       "org.scala-js"             %%% "scalajs-dom" % "0.9.2",
       "com.thoughtworks.binding" %%% "binding"     % "10.0.2",
