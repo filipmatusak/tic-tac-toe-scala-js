@@ -1,5 +1,4 @@
 enablePlugins(WorkbenchPlugin)
-enablePlugins(JavaAppPackaging)
 
 lazy val root = project
   .in(file("."))
