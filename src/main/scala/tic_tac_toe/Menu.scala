@@ -18,9 +18,9 @@ object Menu {
   }
 
   @dom def apply(isMenuOpen: Var[Boolean], height: Var[Int], width: Var[Int], goal: Var[Int]) = {
-    height := 15
-    width := 15
-    goal := 5
+    if(height.get == 0) height := 15
+    if(width.get == 0) width := 15
+    if(goal.get == 0) goal := 5
 
     val heightOutOfBound: Binding[Boolean] = Binding{height.bind < 3}
     val widthOutOfBound: Binding[Boolean] = Binding{width.bind < 3}
