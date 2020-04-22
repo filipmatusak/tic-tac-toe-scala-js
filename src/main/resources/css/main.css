@@ -16,3 +16,11 @@ table {
 button {
   margin: 10px;
 }
+
+.menu-label {
+  text-align: center;
+}
+
+.warning {
+  text-align: left;
+}

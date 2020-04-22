@@ -77,8 +77,7 @@ object Game {
 
     <div class="container">
       <div class="row">
-
-        <p class="col s12"> {
+        <p class="col s12">{
           gameWinner.bind match {
             case None => "Player on turn: " + {playerOnTurn.bind match {
               case 0 => "X"
@@ -87,9 +86,9 @@ object Game {
             case Some(0) => "Winner is X"
             case Some(1) => "Winner is O"
             case Some(_) => "Draw"
-          }
-          }
-        </p>
+          }}</p>
+      </div>
+      <div class="row">
         <div class="col s12">
           <table>
             {
@@ -108,14 +107,18 @@ object Game {
               </tr>
             }}
           </table>
-          <button class="col s2 waves-effect waves-light btn light-blue" onclick={_: Event => goToMenu(())}>Menu</button>
-          <button class="col s2 waves-effect waves-light btn light-blue" onclick={_: Event => reset()}>Reset</button>
-          {
-            val disabled = if(history.bind.nonEmpty && gameWinner.bind.isEmpty) "" else " disabled"
-            <button class={"col s2 waves-effect waves-light btn light-blue" + disabled} onclick={_: Event => handleBack()}>Back</button>
-          }
         </div>
       </div>
+      {
+      val buttonClass = "col s3 m2 waves-effect waves-light btn light-blue"
+      val disabled = if (history.bind.nonEmpty && gameWinner.bind.isEmpty) "" else " disabled"
+
+      <div class="row">
+        <button class={buttonClass} onclick={_: Event => goToMenu(())}>Menu</button>
+        <button class={buttonClass} onclick={_: Event => reset()}>Reset</button>
+        <button class={buttonClass + disabled} onclick={_: Event => handleBack()}>Back</button>
+      </div>
+      }
     </div>
   }
 }
