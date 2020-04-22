@@ -9,5 +9,5 @@ mv index.html home.html
 cp ../tic-tac-toe-opt.js ./js/
 git add .
 git commit -am "heroku"
-git push heroku master
+git push heroku master -f
 
