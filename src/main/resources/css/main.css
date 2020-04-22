@@ -12,3 +12,7 @@ table {
     width: auto;
     margin: auto;
 }
+
+button {
+  margin: 10px;
+}

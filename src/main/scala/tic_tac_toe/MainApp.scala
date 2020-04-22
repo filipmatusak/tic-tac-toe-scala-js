@@ -52,7 +52,7 @@ object MainApp extends JSApp {
                    value={goal.get.toString}></input>
           </div>
           <div class="row">
-            <button class="col s2" onclick={_: Event => menu := false}>Start</button>
+            <button class="col s2 waves-effect waves-light btn light-blue" onclick={_: Event => menu := false}>Start</button>
           </div>
         </div>
       }

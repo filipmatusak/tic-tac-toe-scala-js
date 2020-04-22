@@ -3,40 +3,39 @@ package tic_tac_toe
 import com.thoughtworks.binding.Binding.Var
 import com.thoughtworks.binding.dom
 import org.scalajs.dom.raw.Event
-import scalaz.std.vector._
 
 object Game {
 
   case class GameParams(height: Int, width: Int, goal: Int)
 
-  def reset(params: GameParams,
-            matrix: Vector[Vector[Var[Int]]],
-            playerOnTurn: Var[Int],
-            emptyCells: Var[Int],
-            history: Var[List[Var[Int]]]): Unit = {
-    matrix.map(_.map(_.:=(0)))
-    playerOnTurn := 0
-    emptyCells := params.height * params.width
-    history := Nil
-  }
-
   @dom def newGame(params: GameParams, goToMenu: Unit => Unit) = {
     import params._
 
+    val gameWinner: Var[Option[Int]] = Var(None)
     val matrix: Vector[Vector[Var[Int]]] = Vector.fill(height)(Vector.fill(width)(Var(0)))
     val playerOnTurn = Var(0)
     val emptyCells = Var(height * width)
     val history: Var[List[Var[Int]]] = Var(Nil)
 
+    def reset(): Unit = {
+      for (row <- matrix; cell <- row) cell := 0
+      playerOnTurn := 0
+      emptyCells := params.height * params.width
+      history := Nil
+      gameWinner := None
+    }
+
     def handleClick(value: Var[Int], playerOnTurn: Var[Int]): Unit = {
-      if (value.get == 0) {
+      if (value.get == 0 && gameWinner.get.isEmpty) {
         value.:=(playerOnTurn.get + 1)
-        playerOnTurn.:=((playerOnTurn.get + 1) % 2)
         emptyCells.:=(emptyCells.get - 1)
         history := (value :: history.get)
-        if (findRow() || emptyCells.get == 0) {
-          reset(params, matrix, playerOnTurn, emptyCells, history)
+        if (findRow()) {
+          gameWinner:=Some(playerOnTurn.get)
+        } else if(emptyCells.get == 0){
+          gameWinner:=Some(-1)
         }
+        playerOnTurn.:=((playerOnTurn.get + 1) % 2)
       }
     }
 
@@ -79,33 +78,41 @@ object Game {
     <div class="container">
       <div class="row">
 
-        <p class="col s12">Player on turn:
-          {playerOnTurn.bind match {
-          case 0 => "X"
-          case 1 => "O"
-        }}
+        <p class="col s12"> {
+          gameWinner.bind match {
+            case None => "Player on turn: " + {playerOnTurn.bind match {
+              case 0 => "X"
+              case 1 => "O"
+            }}
+            case Some(0) => "Winner is X"
+            case Some(1) => "Winner is O"
+            case Some(_) => "Draw"
+          }
+          }
         </p>
         <div class="col s12">
           <table>
-            {matrix.map { row =>
-            <tr>
-              {row.map { value =>
-              <td onclick={(_: Event) => handleClick(value, playerOnTurn)}>
-                {value.bind match {
-                case 0 => " "
-                case 1 => "X"
-                case 2 => "O"
+            {
+            import scalaz.std.vector._
+            matrix.map { row =>
+              <tr>
+                {row.map { value =>
+                <td onclick={(_: Event) => handleClick(value, playerOnTurn)}>
+                  {value.bind match {
+                  case 0 => " "
+                  case 1 => "X"
+                  case 2 => "O"
+                }}
+                </td>
               }}
-              </td>
+              </tr>
             }}
-            </tr>
-          }}
           </table>
-          <button class="col s3" onclick={_: Event => goToMenu(())}>Menu</button>
-          <button class="col s3" onclick={_: Event => reset(params, matrix, playerOnTurn, emptyCells, history)}>Reset</button>
+          <button class="col s2 waves-effect waves-light btn light-blue" onclick={_: Event => goToMenu(())}>Menu</button>
+          <button class="col s2 waves-effect waves-light btn light-blue" onclick={_: Event => reset()}>Reset</button>
           {
-          if (history.bind.nonEmpty) <button class="col s3" onclick={_: Event => handleBack()}>Back</button>
-          else <div></div>
+            val disabled = if(history.bind.nonEmpty && gameWinner.bind.isEmpty) "" else " disabled"
+            <button class={"col s2 waves-effect waves-light btn light-blue" + disabled} onclick={_: Event => handleBack()}>Back</button>
           }
         </div>
       </div>
