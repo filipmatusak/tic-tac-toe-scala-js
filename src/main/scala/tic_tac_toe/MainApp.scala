@@ -23,8 +23,8 @@ object MainApp extends JSApp {
 
     <div>
       {
-      if (!isMenuOpen.bind) Game.newGame(GameParams(height.get, width.get, goal.get), { _: Unit => isMenuOpen := true }).bind
-      else Menu(isMenuOpen, height, width, goal).bind
+      if (isMenuOpen.bind) Menu(isMenuOpen, height, width, goal).bind
+      else Game.newGame(GameParams(height.get, width.get, goal.get), { _: Unit => isMenuOpen := true }).bind
       }
     </div>
   }
