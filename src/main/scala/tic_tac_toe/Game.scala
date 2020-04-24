@@ -77,7 +77,7 @@ object Game {
 
     <div class="container">
       <div class="row">
-        <p class="col s12">{
+        <p class="col s12 game-state-label">{
           gameWinner.bind match {
             case None => "Player on turn: " + {playerOnTurn.bind match {
               case 0 => "X"
@@ -114,7 +114,7 @@ object Game {
       val disabled = if (history.bind.nonEmpty && gameWinner.bind.isEmpty) "" else " disabled"
 
       <div class="row">
-        <button class={buttonClass} onclick={_: Event => goToMenu(())}>Menu</button>
+        <button class={buttonClass + " offset-m3"} onclick={_: Event => goToMenu(())}>Menu</button>
         <button class={buttonClass} onclick={_: Event => reset()}>Reset</button>
         <button class={buttonClass + disabled} onclick={_: Event => handleBack()}>Back</button>
       </div>

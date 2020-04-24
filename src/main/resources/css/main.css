@@ -22,5 +22,9 @@ button {
 }
 
 .warning {
-  text-align: left;
+  text-align: center;
+}
+
+.game-state-label {
+  text-align: center;
 }

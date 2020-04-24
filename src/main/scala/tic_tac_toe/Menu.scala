@@ -11,7 +11,7 @@ object Menu {
   }
 
   @dom def warning(value: Binding[Boolean]) = {
-    <div class="col s12 m7">{
+    <div class="col s12">{
       if(value.bind) <p class="warning red-text">Value must be at least 3</p>
       else <div></div>
       }</div>
@@ -28,7 +28,7 @@ object Menu {
 
     <div class="section container">
       <div class="row">
-        <div class="col s4 m2"><p class="menu-label">Height:</p></div>
+        <div class="col s3 offset-s2"><p class="menu-label">Height:</p></div>
         <input type="number"
                class={s"col s3 m3 "}
                id="heightInput"
@@ -37,7 +37,7 @@ object Menu {
         {warning(heightOutOfBound).bind}
       </div>
       <div class="row">
-        <div class="col s4 m2"><p class="menu-label">Width:</p></div>
+        <div class="col s3 offset-s2"><p class="menu-label">Width:</p></div>
         <input type="number"
                class={s"col s3 m3 "}
                id="widthInput"
@@ -46,7 +46,7 @@ object Menu {
         {warning(widthOutOfBound).bind}
       </div>
       <div class="row">
-        <div class="col s4 m2"><p class="menu-label">Goal:</p></div>
+        <div class="col s3 offset-s2"><p class="menu-label">Goal:</p></div>
         <input type="number"
                class={s"col s3 m3"}
                id="goalInput"
@@ -57,7 +57,7 @@ object Menu {
       <div class="row">
         {
         val disabled = if(heightOutOfBound.bind || widthOutOfBound.bind || goalOutOfBound.bind) " disabled" else ""
-        <button class={s"col s12 m3 waves-effect waves-light btn light-blue $mainColor $disabled"} onclick={_: Event => isMenuOpen := false}>Start</button>}
+        <button class={s"col s6 offset-s3 waves-effect waves-light btn light-blue $mainColor $disabled"} onclick={_: Event => isMenuOpen := false}>Start</button>}
       </div>
     </div>
   }
