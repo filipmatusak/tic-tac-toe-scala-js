@@ -110,13 +110,14 @@ object Game {
         </div>
       </div>
       {
-      val buttonClass = "col s3 m2 waves-effect waves-light btn light-blue"
+      val buttonClass = "waves-effect waves-light btn light-blue"
+      val divClass = "col s4"
       val disabled = if (history.bind.nonEmpty && gameWinner.bind.isEmpty) "" else " disabled"
 
       <div class="row">
-        <button class={buttonClass + " offset-m3"} onclick={_: Event => goToMenu(())}>Menu</button>
-        <button class={buttonClass} onclick={_: Event => reset()}>Reset</button>
-        <button class={buttonClass + disabled} onclick={_: Event => handleBack()}>Back</button>
+        <div class={divClass}><button class={buttonClass} onclick={_: Event => goToMenu(())}>Menu</button></div>
+        <div class={divClass}><button class={buttonClass} onclick={_: Event => reset()}>Reset</button></div>
+        <div class={divClass}><button class={buttonClass + disabled} onclick={_: Event => handleBack()}>Back</button></div>
       </div>
       }
     </div>

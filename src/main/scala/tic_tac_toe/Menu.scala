@@ -28,27 +28,27 @@ object Menu {
 
     <div class="section container">
       <div class="row">
-        <div class="col s3 offset-s2"><p class="menu-label">Height:</p></div>
+        <div class="col s3 offset-s3"><p class="menu-label">Height:</p></div>
         <input type="number"
-               class={s"col s3 m3 "}
+               class={s"col s3"}
                id="heightInput"
                onkeyup={(e: Event) => height := stringToInt(heightInput.value)}
                value={height.get.toString}></input>
         {warning(heightOutOfBound).bind}
       </div>
       <div class="row">
-        <div class="col s3 offset-s2"><p class="menu-label">Width:</p></div>
+        <div class="col s3 offset-s3"><p class="menu-label">Width:</p></div>
         <input type="number"
-               class={s"col s3 m3 "}
+               class={s"col s3"}
                id="widthInput"
                onkeyup={(e: Event) => width := stringToInt(widthInput.value)}
                value={width.get.toString}></input>
         {warning(widthOutOfBound).bind}
       </div>
       <div class="row">
-        <div class="col s3 offset-s2"><p class="menu-label">Goal:</p></div>
+        <div class="col s3 offset-s3"><p class="menu-label">Goal:</p></div>
         <input type="number"
-               class={s"col s3 m3"}
+               class={s"col s3"}
                id="goalInput"
                onkeyup={(e: Event) => goal := stringToInt(goalInput.value)}
                value={goal.get.toString}></input>
@@ -57,7 +57,7 @@ object Menu {
       <div class="row">
         {
         val disabled = if(heightOutOfBound.bind || widthOutOfBound.bind || goalOutOfBound.bind) " disabled" else ""
-        <button class={s"col s6 offset-s3 waves-effect waves-light btn light-blue $mainColor $disabled"} onclick={_: Event => isMenuOpen := false}>Start</button>}
+        <button class={s"col s6 offset-s3 l4 offset-l5 waves-effect waves-light btn light-blue $mainColor $disabled"} onclick={_: Event => isMenuOpen := false}>Start</button>}
       </div>
     </div>
   }
