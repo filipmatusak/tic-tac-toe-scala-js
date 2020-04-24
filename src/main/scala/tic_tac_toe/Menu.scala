@@ -17,10 +17,21 @@ object Menu {
       }</div>
   }
 
+  def defaultSize(): (Int, Int) = {
+    val screenSize = org.scalajs.dom.window.screen.availWidth
+    val containerSize = if(screenSize <= 600) .9 else if(screenSize <= 992) .85 else .7
+    val width = (org.scalajs.dom.window.screen.availHeight * containerSize / 32 - 1).toInt.min(20)
+    val height = (org.scalajs.dom.window.screen.availWidth * containerSize / 32).toInt.min(20)
+    (width, height)
+  }
+
   @dom def apply(isMenuOpen: Var[Boolean], height: Var[Int], width: Var[Int], goal: Var[Int]) = {
-    if(height.get == 0) height := 15
-    if(width.get == 0) width := 15
-    if(goal.get == 0) goal := 5
+    if(height.get == 0) {
+      val (h, w) = defaultSize()
+      height := h
+      width := w
+      goal := 5
+    }
 
     val heightOutOfBound: Binding[Boolean] = Binding{height.bind < 3}
     val widthOutOfBound: Binding[Boolean] = Binding{width.bind < 3}
