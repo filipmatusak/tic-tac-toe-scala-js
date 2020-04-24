@@ -7,27 +7,31 @@ import org.scalajs.dom.raw.Event
 object Game {
 
   case class GameParams(height: Int, width: Int, goal: Int)
+  case class Cell(selected: Var[Option[Int]] = Var(None), winning: Var[Boolean] = Var(false))
 
   @dom def newGame(params: GameParams, goToMenu: Unit => Unit) = {
     import params._
 
     val gameWinner: Var[Option[Int]] = Var(None)
-    val matrix: Vector[Vector[Var[Int]]] = Vector.fill(height)(Vector.fill(width)(Var(0)))
+    val matrix: Vector[Vector[Cell]] = Vector.fill(height)(Vector.fill(width)(Cell()))
     val playerOnTurn = Var(0)
     val emptyCells = Var(height * width)
-    val history: Var[List[Var[Int]]] = Var(Nil)
+    val history: Var[List[Cell]] = Var(Nil)
 
     def reset(): Unit = {
-      for (row <- matrix; cell <- row) cell := 0
+      for (row <- matrix; cell <- row) {
+        cell.selected := None
+        cell.winning := false
+      }
       playerOnTurn := 0
       emptyCells := params.height * params.width
       history := Nil
       gameWinner := None
     }
 
-    def handleClick(value: Var[Int], playerOnTurn: Var[Int]): Unit = {
-      if (value.get == 0 && gameWinner.get.isEmpty) {
-        value.:=(playerOnTurn.get + 1)
+    def handleClick(value: Cell, playerOnTurn: Var[Int]): Unit = {
+      if (value.selected.get.isEmpty && gameWinner.get.isEmpty) {
+        value.selected := Some(playerOnTurn.get + 1)
         emptyCells.:=(emptyCells.get - 1)
         history := (value :: history.get)
         if (findRow()) {
@@ -40,7 +44,7 @@ object Game {
     }
 
     def handleBack(): Unit = {
-      history.get.head := 0
+      history.get.head.selected := None
       history := history.get.tail
       playerOnTurn.:=((playerOnTurn.get + 1) % 2)
     }
@@ -49,14 +53,17 @@ object Game {
     def findRow(): Boolean = {
       def find(startX: Int, startY: Int, dx: Int, dy: Int): Boolean = {
         var count = 1
-        var last = matrix(startX)(startY).get
+        var last = matrix(startX)(startY).selected.get
         var x = startX + dx
         var y = startY + dy
         while (x >= 0 && x < height && y >= 0 && y < width) {
-          val v = matrix(x)(y).get
+          val v = matrix(x)(y).selected.get
           if (v == last) {
             count += 1
-            if (count >= goal && last > 0) return true
+            if (count >= goal && last.nonEmpty) {
+              for(i <- 0 until goal) matrix(x-i*dx)(y-i*dy).winning := true
+              return true
+            }
           } else {
             count = 1
             last = v
@@ -87,8 +94,6 @@ object Game {
             case Some(1) => "Winner is O"
             case Some(_) => "Draw"
           }}</p>
-      </div>
-      <div class="row">
         <div class="col s12">
           <table>
             {
@@ -96,12 +101,14 @@ object Game {
             matrix.map { row =>
               <tr>
                 {row.map { value =>
-                <td onclick={(_: Event) => handleClick(value, playerOnTurn)}>
-                  {value.bind match {
-                  case 0 => " "
-                  case 1 => "X"
-                  case 2 => "O"
+                val text = {value.selected.bind match {
+                  case Some(1) => "X"
+                  case Some(2) => "O"
+                  case _ => " "
                 }}
+                val color = if(value.winning.bind) "light-blue lighten-4" else ""
+                <td class={color} onclick={(_: Event) => handleClick(value, playerOnTurn)}>
+                  {text}
                 </td>
               }}
               </tr>
