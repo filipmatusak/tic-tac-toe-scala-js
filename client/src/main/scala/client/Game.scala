@@ -1,5 +1,6 @@
-package tic_tac_toe
+package client
 
+import org.scalajs.dom.raw.Event
 import com.thoughtworks.binding.Binding.Var
 import com.thoughtworks.binding.dom
 import org.scalajs.dom.raw.Event

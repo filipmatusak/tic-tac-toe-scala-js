@@ -1,11 +1,13 @@
-package tic_tac_toe
+package client
 
+import client.Game.GameParams
+import org.scalajs.dom.document
 import com.thoughtworks.binding.Binding.Var
 import com.thoughtworks.binding.dom
 import org.scalajs.dom.document
-import tic_tac_toe.Game.GameParams
 
 import scala.scalajs.js.JSApp
+import scala.scalajs.js.annotation.JSExport
 
 object MainApp extends JSApp {
 

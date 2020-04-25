@@ -1,10 +1,12 @@
-package tic_tac_toe
+package client
 
+import org.scalajs.dom._
+import org.scalajs.dom.raw.Event
 import com.thoughtworks.binding.Binding.Var
 import com.thoughtworks.binding.{Binding, dom}
 import org.scalajs.dom._
 import org.scalajs.dom.raw.Event
-import tic_tac_toe.MainApp.mainColor
+import MainApp.mainColor
 
 object Menu {
   def stringToInt(str: String): Int = if(str == "") 0 else str.toInt
